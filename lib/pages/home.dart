@@ -5,6 +5,7 @@ import 'package:smart_foot_traffic_ui/components/summary_board.dart';
 import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
 import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
 import 'package:smart_foot_traffic_ui/components/appbar_button.dart';
+import 'package:smart_foot_traffic_ui/components/zoom_button.dart';
 import '../components/heatmap_view.dart';
 
 class PersistentHeatmapView extends StatefulWidget {
@@ -181,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(width: 16),
+                    ZoomButton(url: heatmapUrl),
                   ],
                 ),
               ),
