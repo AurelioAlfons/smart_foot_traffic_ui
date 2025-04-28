@@ -5,6 +5,7 @@ class DropdownSelector extends StatelessWidget {
   final List<String> items;
   final String? selectedValue;
   final ValueChanged<String?> onChanged;
+  final ValueChanged<bool>? onDropdownStateChanged; // 👈 ADD THIS
 
   const DropdownSelector({
     super.key,
@@ -12,6 +13,7 @@ class DropdownSelector extends StatelessWidget {
     required this.items,
     required this.selectedValue,
     required this.onChanged,
+    this.onDropdownStateChanged, // 👈 ADD THIS
   });
 
   @override
@@ -45,7 +47,17 @@ class DropdownSelector extends StatelessWidget {
                     child: Text(value),
                   ))
               .toList(),
-          onChanged: onChanged,
+          onChanged: (value) {
+            onChanged(value); // update selected value
+            if (onDropdownStateChanged != null) {
+              onDropdownStateChanged!(false); // 👈 dropdown closed
+            }
+          },
+          onTap: () {
+            if (onDropdownStateChanged != null) {
+              onDropdownStateChanged!(true); // 👈 dropdown opened
+            }
+          },
         ),
       ),
     );

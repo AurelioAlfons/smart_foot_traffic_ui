@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class CalendarDropdown extends StatefulWidget {
   final ValueChanged<DateTime> onDateSelected;
+  final ValueChanged<bool> onDropdownStateChanged; // 👈 Add this!
 
-  const CalendarDropdown({super.key, required this.onDateSelected});
+  const CalendarDropdown({
+    super.key,
+    required this.onDateSelected,
+    required this.onDropdownStateChanged, // 👈 Add this too
+  });
 
   @override
   State<CalendarDropdown> createState() => _CalendarDropdownState();
@@ -18,8 +23,10 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
   void _toggleCalendar() {
     if (_overlayEntry == null) {
       _showCalendar();
+      widget.onDropdownStateChanged(true); // 👈 Notify open
     } else {
       _removeCalendar();
+      widget.onDropdownStateChanged(false); // 👈 Notify close
     }
   }
 
@@ -31,6 +38,7 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
   void _removeCalendar() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+    widget.onDropdownStateChanged(false); // 👈 Notify close if removed manually
   }
 
   OverlayEntry _createOverlayEntry() {
@@ -106,7 +114,7 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
                     ? Icons.arrow_drop_down
                     : Icons.arrow_drop_up,
                 color: Colors.black,
-                size: 24, // normal small size like dropdown
+                size: 24,
               ),
             ],
           ),

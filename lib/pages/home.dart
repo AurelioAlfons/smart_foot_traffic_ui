@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
 import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
-import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart'; // 👈 NEW
-import 'package:smart_foot_traffic_ui/components/appbar_button.dart'; // 👈 NEW
+import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
+import 'package:smart_foot_traffic_ui/components/appbar_button.dart';
 import '../components/heatmap_view.dart';
 
 class PersistentHeatmapView extends StatefulWidget {
@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedSeason;
 
   String? heatmapUrl;
+  bool isDropdownOpen = false; // Track if any dropdown is open
 
   @override
   Widget build(BuildContext context) {
@@ -108,41 +109,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 16),
                     DropdownSelector(
                       label: "Traffic Type",
-                      items: const [
-                        "Traffic Type",
-                        "Pedestrian",
-                        "Vehicle",
-                        "Cyclist"
-                      ],
-                      selectedValue: selectedTrafficType ?? "Traffic Type",
-                      onChanged: (value) => setState(() {
-                        selectedTrafficType = value == "None" ? null : value;
-                      }),
+                      items: const ["None", "Pedestrian", "Vehicle", "Cyclist"],
+                      selectedValue: selectedTrafficType ?? "None",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTrafficType = value == "None" ? null : value;
+                        });
+                      },
+                      onDropdownStateChanged: (isOpen) {
+                        setState(() {
+                          isDropdownOpen = isOpen;
+                        });
+                      },
                     ),
                     const SizedBox(width: 16),
                     _buildDatePickerButton(),
                     const SizedBox(width: 16),
                     DropdownSelector(
                       label: "Time",
-                      items: const ["12:00:00", "13:00:00"],
-                      selectedValue: selectedTime,
-                      onChanged: (value) =>
-                          setState(() => selectedTime = value),
+                      items: const ["None", "12:00:00", "13:00:00"],
+                      selectedValue: selectedTime ?? "None",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTime = value == "None" ? null : value;
+                        });
+                      },
+                      onDropdownStateChanged: (isOpen) {
+                        setState(() {
+                          isDropdownOpen = isOpen;
+                        });
+                      },
                     ),
                     const SizedBox(width: 16),
                     DropdownSelector(
                       label: "Season",
                       items: const [
-                        "Season",
+                        "None",
                         "Summer",
                         "Autumn",
                         "Winter",
                         "Spring"
                       ],
-                      selectedValue: selectedSeason ?? "Season",
-                      onChanged: (value) => setState(() {
-                        selectedSeason = value == "None" ? null : value;
-                      }),
+                      selectedValue: selectedSeason ?? "None",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSeason = value == "None" ? null : value;
+                        });
+                      },
+                      onDropdownStateChanged: (isOpen) {
+                        setState(() {
+                          isDropdownOpen = isOpen;
+                        });
+                      },
                     ),
                     const SizedBox(width: 16),
                     SizedBox(
@@ -154,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                           elevation: 4,
                         ),
                         onPressed: generateHeatmap,
@@ -180,21 +199,34 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
                       ),
-                      child: heatmapUrl == null
-                          ? const Center(
-                              child: Text(
-                                "No Map",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                      child: isDropdownOpen
+                          ? Container(
+                              color: Colors.white,
+                              child: const Center(
+                                child: Text(
+                                  "Select Parameters",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             )
-                          : PersistentHeatmapView(
-                              url: heatmapUrl!,
-                              key: ValueKey(heatmapUrl),
-                            ),
+                          : (heatmapUrl == null
+                              ? const Center(
+                                  child: Text(
+                                    "No Map",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : PersistentHeatmapView(
+                                  url: heatmapUrl!,
+                                  key: ValueKey(heatmapUrl),
+                                )),
                     ),
                   ),
                   Expanded(
@@ -228,6 +260,11 @@ class _HomeScreenState extends State<HomeScreen> {
               "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
         });
       },
+      onDropdownStateChanged: (isOpen) {
+        setState(() {
+          isDropdownOpen = isOpen;
+        });
+      },
     );
   }
 
@@ -235,10 +272,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       heatmapUrl =
           "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm"
-          "?type=$selectedTrafficType"
-          "&date=$selectedDate"
-          "&time=$selectedTime"
-          "&season=$selectedSeason";
+          "?type=${selectedTrafficType ?? ''}"
+          "&date=${selectedDate ?? ''}"
+          "&time=${selectedTime ?? ''}"
+          "&season=${selectedSeason ?? ''}";
     });
 
     print("Generate clicked with selections:");
