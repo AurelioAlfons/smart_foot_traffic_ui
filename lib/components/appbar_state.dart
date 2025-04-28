@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_foot_traffic_ui/pages/about/about_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/home/home_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/location/location_screen.dart';
+import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
+import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
 // Import transport, map, about when ready
 // import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
 // import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
@@ -111,12 +114,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     switch (routeName) {
       case '/location':
         return const LocationScreen();
-      // case '/transport':
-      //   return const TransportScreen();
-      // case '/map':
-      //   return const MapScreen();
-      // case '/about':
-      //   return const AboutScreen();
+      case '/transport':
+        return const TransportScreen();
+      case '/map':
+        return const MapScreen();
+      case '/about':
+        return const AboutScreen();
       case '/':
       default:
         return const HomeScreen();
