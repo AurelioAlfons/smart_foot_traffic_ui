@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
+import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart'; // 👈 Import the separated CalendarDropdown
 import '../components/heatmap_view.dart';
 
 class PersistentHeatmapView extends StatefulWidget {
@@ -29,7 +30,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? selectedTrafficType;
-  String? selectedLocation;
   String? selectedDate;
   String? selectedTime;
   String? selectedSeason;
@@ -110,11 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         selectedTrafficType,
                         (value) => setState(() => selectedTrafficType = value)),
                     const SizedBox(width: 16),
-                    _buildDropdown(
-                        "Date",
-                        ["2025-02-27", "2025-03-03"],
-                        selectedDate,
-                        (value) => setState(() => selectedDate = value)),
+                    _buildDatePickerButton(),
                     const SizedBox(width: 16),
                     _buildDropdown(
                         "Time",
@@ -232,6 +228,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildDatePickerButton() {
+    return CalendarDropdown(
+      onDateSelected: (pickedDate) {
+        setState(() {
+          selectedDate =
+              "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+        });
+      },
+    );
+  }
+
   Widget _buildAppBarButton(String label) {
     return TextButton(
       onPressed: () {},
@@ -248,7 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
       heatmapUrl =
           "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm"
           "?type=$selectedTrafficType"
-          "&location=$selectedLocation"
           "&date=$selectedDate"
           "&time=$selectedTime"
           "&season=$selectedSeason";
@@ -256,7 +262,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     print("Generate clicked with selections:");
     print("Traffic Type: $selectedTrafficType");
-    print("Location: $selectedLocation");
     print("Date: $selectedDate");
     print("Time: $selectedTime");
     print("Season: $selectedSeason");
