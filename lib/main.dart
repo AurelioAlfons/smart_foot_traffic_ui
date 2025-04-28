@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/home/home_screen.dart';
+// Later you can add transport, map, about screens
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(), // 👈 Show Home screen
+      home: const HomeScreen(),
     );
   }
 }

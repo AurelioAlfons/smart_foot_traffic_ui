@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedSeason;
 
   String? heatmapUrl;
-  bool isDropdownOpen = false; // Track if any dropdown is open
+  bool isDropdownOpen = false;
 
   @override
   Widget build(BuildContext context) {
