@@ -1,8 +1,24 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:smart_foot_traffic_ui/components/summary_board.dart';
 import '../components/heatmap_view.dart';
-import '../components/summary_board.dart';
+
+class PersistentHeatmapView extends StatefulWidget {
+  final String url;
+
+  const PersistentHeatmapView({required this.url, super.key});
+
+  @override
+  State<PersistentHeatmapView> createState() => _PersistentHeatmapViewState();
+}
+
+class _PersistentHeatmapViewState extends State<PersistentHeatmapView> {
+  @override
+  Widget build(BuildContext context) {
+    return HeatmapView(url: widget.url);
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,8 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedTime;
   String? selectedSeason;
 
-  String heatmapUrl =
-      "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm";
+  String? heatmapUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/council_logo.png',
-                    height: 160,
-                  ),
+                  Image.asset('assets/images/council_logo.png', height: 160),
                   const Spacer(),
                   _buildAppBarButton("Home"),
                   _buildAppBarButton("Location"),
@@ -95,35 +107,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildDropdown(
                         "Traffic Type",
                         ["Pedestrian", "Vehicle", "Cyclist"],
-                        selectedTrafficType, (value) {
-                      setState(() => selectedTrafficType = value);
-                    }),
+                        selectedTrafficType,
+                        (value) => setState(() => selectedTrafficType = value)),
                     const SizedBox(width: 16),
                     _buildDropdown(
-                        "Location",
-                        ["Footscray", "City Center", "West"],
-                        selectedLocation, (value) {
-                      setState(() => selectedLocation = value);
-                    }),
+                        "Date",
+                        ["2025-02-27", "2025-03-03"],
+                        selectedDate,
+                        (value) => setState(() => selectedDate = value)),
                     const SizedBox(width: 16),
                     _buildDropdown(
-                        "Date", ["2025-02-27", "2025-03-03"], selectedDate,
-                        (value) {
-                      setState(() => selectedDate = value);
-                    }),
-                    const SizedBox(width: 16),
-                    _buildDropdown(
-                        "Time", ["12:00:00", "13:00:00"], selectedTime,
-                        (value) {
-                      setState(() => selectedTime = value);
-                    }),
+                        "Time",
+                        ["12:00:00", "13:00:00"],
+                        selectedTime,
+                        (value) => setState(() => selectedTime = value)),
                     const SizedBox(width: 16),
                     _buildDropdown(
                         "Season",
                         ["Summer", "Autumn", "Winter", "Spring"],
-                        selectedSeason, (value) {
-                      setState(() => selectedSeason = value);
-                    }),
+                        selectedSeason,
+                        (value) => setState(() => selectedSeason = value)),
                     const SizedBox(width: 16),
                     SizedBox(
                       height: 45,
@@ -134,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                              borderRadius: BorderRadius.circular(8)),
                           elevation: 4,
                         ),
                         onPressed: generateHeatmap,
@@ -153,11 +155,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     flex: 5,
-                    child: HeatmapView(url: heatmapUrl),
+                    child: Container(
+                      margin: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: heatmapUrl == null
+                          ? const Center(
+                              child: Text(
+                                "No Map",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          : PersistentHeatmapView(
+                              url: heatmapUrl!,
+                              key: ValueKey(heatmapUrl),
+                            ),
+                    ),
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 1,
-                    child: SummaryBoard(),
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(top: 12, right: 12, bottom: 12),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: const SummaryBoard(),
+                    ),
                   ),
                 ],
               ),
@@ -188,10 +223,8 @@ class _HomeScreenState extends State<HomeScreen> {
           style:
               const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
           items: items
-              .map((value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
-                  ))
+              .map(
+                  (value) => DropdownMenuItem(value: value, child: Text(value)))
               .toList(),
           onChanged: onChanged,
         ),
@@ -213,7 +246,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void generateHeatmap() {
     setState(() {
       heatmapUrl =
-          "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm";
+          "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm"
+          "?type=$selectedTrafficType"
+          "&location=$selectedLocation"
+          "&date=$selectedDate"
+          "&time=$selectedTime"
+          "&season=$selectedSeason";
     });
 
     print("Generate clicked with selections:");
