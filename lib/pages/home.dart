@@ -18,7 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedTime;
   String? selectedSeason;
 
-  String heatmapUrl = "https://aurelioalfons.github.io/aurelio_portfolio_html/";
+  String heatmapUrl =
+      "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm";
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void generateHeatmap() {
     setState(() {
-      heatmapUrl = "https://aurelioalfons.github.io/aurelio_portfolio_html/";
+      heatmapUrl =
+          "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm";
     });
 
     print("Generate clicked with selections:");
