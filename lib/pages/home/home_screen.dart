@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/components/appbar_state.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
@@ -7,6 +9,7 @@ import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
 import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
 import 'package:smart_foot_traffic_ui/components/zoom_button.dart';
 import '../../components/heatmap_view.dart';
+import 'package:http/http.dart' as http;
 
 class PersistentHeatmapView extends StatefulWidget {
   final String url;
@@ -39,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String? heatmapUrl;
   bool isDropdownOpen = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -189,27 +193,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   "Select Parameters",
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                  ),
+                                      color: Colors.black, fontSize: 18),
                                 ),
                               ),
                             )
-                          : (heatmapUrl == null
+                          : isLoading
                               ? const Center(
-                                  child: Text(
-                                    "No Map",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  child:
+                                      CircularProgressIndicator(), // 🌀 Show loading
                                 )
-                              : PersistentHeatmapView(
-                                  url: heatmapUrl!,
-                                  key: ValueKey(heatmapUrl),
-                                )),
+                              : (heatmapUrl == null
+                                  ? const Center(
+                                      child: Text(
+                                        "No Map",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  : PersistentHeatmapView(
+                                      url: heatmapUrl!,
+                                      key: ValueKey(heatmapUrl),
+                                    )),
                     ),
                   ),
                   Expanded(
@@ -251,18 +258,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void generateHeatmap() {
+  void generateHeatmap() async {
+    print("\nGenerateHeatmap function called");
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    print("Traffic Type: $selectedTrafficType");
+    print("Selected Date: $selectedDate");
+    print("Selected Time: $selectedTime");
+    print("Selected Season: $selectedSeason");
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+    if (selectedTrafficType == null || selectedDate == null) {
+      print("Please select traffic type and date first!");
+      return;
+    }
+
+    String trafficTypeForBackend = "";
+    if (selectedTrafficType == "Pedestrian") {
+      trafficTypeForBackend = "Pedestrian Count";
+    } else if (selectedTrafficType == "Vehicle") {
+      trafficTypeForBackend = "Vehicle Count";
+    } else if (selectedTrafficType == "Cyclist") {
+      trafficTypeForBackend = "Cyclist Count";
+    }
+
+    final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap");
+
     setState(() {
-      heatmapUrl =
-          // Aurelio: Home Wifi
-          "http://192.168.1.118:5000/heatmaps/heatmap_2025-02-27_01-00-00_Vehicle_Count.html";
+      isLoading = true;
     });
 
-    print("Generate clicked with selections:");
-    print("Traffic Type: $selectedTrafficType");
-    print("Date: $selectedDate");
-    print("Time: $selectedTime");
-    print("Season: $selectedSeason");
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "date": selectedDate,
+          "time": selectedTime,
+          "traffic_type": trafficTypeForBackend,
+          "season": selectedSeason,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          heatmapUrl = data['heatmap_url'];
+        });
+        print("Heatmap generated at: $heatmapUrl");
+      } else {
+        print("Failed to generate heatmap. Status: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error generating heatmap: $e");
+    } finally {
+      setState(() {
+        isLoading = false; // 👈 Stop loading
+      });
+    }
   }
 
   // 👇 ADD this at the end
