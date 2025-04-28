@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
-import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart'; // 👈 Import the separated CalendarDropdown
+import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
+import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart'; // 👈 NEW
+import 'package:smart_foot_traffic_ui/components/appbar_button.dart'; // 👈 NEW
 import '../components/heatmap_view.dart';
 
 class PersistentHeatmapView extends StatefulWidget {
@@ -65,11 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Image.asset('assets/images/council_logo.png', height: 160),
                   const Spacer(),
-                  _buildAppBarButton("Home"),
-                  _buildAppBarButton("Location"),
-                  _buildAppBarButton("Transport"),
-                  _buildAppBarButton("Map"),
-                  _buildAppBarButton("About"),
+                  AppBarButton(label: "Home", onPressed: () {}),
+                  AppBarButton(label: "Location", onPressed: () {}),
+                  AppBarButton(label: "Transport", onPressed: () {}),
+                  AppBarButton(label: "Map", onPressed: () {}),
+                  AppBarButton(label: "About", onPressed: () {}),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -104,25 +106,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     const SizedBox(width: 16),
-                    _buildDropdown(
+                    DropdownSelector(
+                      label: "Traffic Type",
+                      items: const [
                         "Traffic Type",
-                        ["Pedestrian", "Vehicle", "Cyclist"],
-                        selectedTrafficType,
-                        (value) => setState(() => selectedTrafficType = value)),
+                        "Pedestrian",
+                        "Vehicle",
+                        "Cyclist"
+                      ],
+                      selectedValue: selectedTrafficType ?? "Traffic Type",
+                      onChanged: (value) => setState(() {
+                        selectedTrafficType = value == "None" ? null : value;
+                      }),
+                    ),
                     const SizedBox(width: 16),
                     _buildDatePickerButton(),
                     const SizedBox(width: 16),
-                    _buildDropdown(
-                        "Time",
-                        ["12:00:00", "13:00:00"],
-                        selectedTime,
-                        (value) => setState(() => selectedTime = value)),
+                    DropdownSelector(
+                      label: "Time",
+                      items: const ["12:00:00", "13:00:00"],
+                      selectedValue: selectedTime,
+                      onChanged: (value) =>
+                          setState(() => selectedTime = value),
+                    ),
                     const SizedBox(width: 16),
-                    _buildDropdown(
+                    DropdownSelector(
+                      label: "Season",
+                      items: const [
                         "Season",
-                        ["Summer", "Autumn", "Winter", "Spring"],
-                        selectedSeason,
-                        (value) => setState(() => selectedSeason = value)),
+                        "Summer",
+                        "Autumn",
+                        "Winter",
+                        "Spring"
+                      ],
+                      selectedValue: selectedSeason ?? "Season",
+                      onChanged: (value) => setState(() {
+                        selectedSeason = value == "None" ? null : value;
+                      }),
+                    ),
                     const SizedBox(width: 16),
                     SizedBox(
                       height: 45,
@@ -199,35 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String? selectedValue,
-      ValueChanged<String?> onChanged) {
-    return Container(
-      height: 45,
-      decoration: BoxDecoration(
-        color: Colors.yellow[700],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: selectedValue,
-          hint: Text(label,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w600)),
-          dropdownColor: Colors.yellow[700],
-          iconEnabledColor: Colors.black,
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          items: items
-              .map(
-                  (value) => DropdownMenuItem(value: value, child: Text(value)))
-              .toList(),
-          onChanged: onChanged,
-        ),
-      ),
-    );
-  }
-
   Widget _buildDatePickerButton() {
     return CalendarDropdown(
       onDateSelected: (pickedDate) {
@@ -236,17 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
               "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
         });
       },
-    );
-  }
-
-  Widget _buildAppBarButton(String label) {
-    return TextButton(
-      onPressed: () {},
-      child: Text(
-        label,
-        style: const TextStyle(
-            color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
-      ),
     );
   }
 
