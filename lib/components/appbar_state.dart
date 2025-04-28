@@ -4,11 +4,6 @@ import 'package:smart_foot_traffic_ui/pages/home/home_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/location/location_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
-// Import transport, map, about when ready
-// import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
-// import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
-// import 'package:smart_foot_traffic_ui/pages/about/about_screen.dart';
-
 import 'appbar_button.dart'; // ✅ still needed
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -43,37 +38,76 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/council_logo.png', height: 160),
-              const Spacer(),
-              AppBarButton(
-                label: "Home",
-                onPressed: () {
+              // Wrap Image inside GestureDetector for both click and hover effect
+              GestureDetector(
+                onTap: () {
                   navigateWithoutAnimation(context, '/');
                 },
+                child: MouseRegion(
+                  onEnter: (_) {
+                    // Changes cursor to hand pointer when hovering
+                    SystemMouseCursors.click;
+                  },
+                  child: Image.asset('assets/images/council_logo.png',
+                      height: 160),
+                ),
               ),
-              AppBarButton(
-                label: "Location",
-                onPressed: () {
-                  navigateWithoutAnimation(context, '/location');
+              const Spacer(),
+              // AppBar buttons to navigate between screens with hover effect and pointer cursor
+              MouseRegion(
+                onEnter: (_) {
+                  SystemMouseCursors.click;
                 },
+                child: AppBarButton(
+                  label: "Home",
+                  onPressed: () {
+                    navigateWithoutAnimation(context, '/');
+                  },
+                ),
               ),
-              AppBarButton(
-                label: "Transport",
-                onPressed: () {
-                  navigateWithoutAnimation(context, '/transport');
+              MouseRegion(
+                onEnter: (_) {
+                  SystemMouseCursors.click;
                 },
+                child: AppBarButton(
+                  label: "Location",
+                  onPressed: () {
+                    navigateWithoutAnimation(context, '/location');
+                  },
+                ),
               ),
-              AppBarButton(
-                label: "Map",
-                onPressed: () {
-                  navigateWithoutAnimation(context, '/map');
+              MouseRegion(
+                onEnter: (_) {
+                  SystemMouseCursors.click;
                 },
+                child: AppBarButton(
+                  label: "Transport",
+                  onPressed: () {
+                    navigateWithoutAnimation(context, '/transport');
+                  },
+                ),
               ),
-              AppBarButton(
-                label: "About",
-                onPressed: () {
-                  navigateWithoutAnimation(context, '/about');
+              MouseRegion(
+                onEnter: (_) {
+                  SystemMouseCursors.click;
                 },
+                child: AppBarButton(
+                  label: "Map",
+                  onPressed: () {
+                    navigateWithoutAnimation(context, '/map');
+                  },
+                ),
+              ),
+              MouseRegion(
+                onEnter: (_) {
+                  SystemMouseCursors.click;
+                },
+                child: AppBarButton(
+                  label: "About",
+                  onPressed: () {
+                    navigateWithoutAnimation(context, '/about');
+                  },
+                ),
               ),
               const SizedBox(width: 8),
               ElevatedButton(
