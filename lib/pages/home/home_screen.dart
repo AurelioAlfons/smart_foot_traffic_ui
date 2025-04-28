@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:smart_foot_traffic_ui/components/appbar_state.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
 import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
 import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
-import 'package:smart_foot_traffic_ui/components/appbar_button.dart';
 import 'package:smart_foot_traffic_ui/components/zoom_button.dart';
 import '../../components/heatmap_view.dart';
 
@@ -43,59 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 20,
-                spreadRadius: 2,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            toolbarHeight: 90,
-            title: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/council_logo.png', height: 160),
-                  const Spacer(),
-                  AppBarButton(
-                      label: "Home", onPressed: resetState), // 👈 Reset here
-                  AppBarButton(label: "Location", onPressed: () {}),
-                  AppBarButton(label: "Transport", onPressed: () {}),
-                  AppBarButton(label: "Map", onPressed: () {}),
-                  AppBarButton(label: "About", onPressed: () {}),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow[700],
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 14),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Text("Register Now →"),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(onHomePressed: resetState),
       body: Container(
         color: Colors.white,
         child: Column(
