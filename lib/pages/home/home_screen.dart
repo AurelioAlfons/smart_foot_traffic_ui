@@ -228,11 +228,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void generateHeatmap() {
     setState(() {
       heatmapUrl =
-          "https://science.howstuffworks.com/environmental/earth/geophysics/map.htm"
-          "?type=${selectedTrafficType ?? ''}"
-          "&date=${selectedDate ?? ''}"
-          "&time=${selectedTime ?? ''}"
-          "&season=${selectedSeason ?? ''}";
+          // Aurelio: Home Wifi
+          "http://192.168.1.118:5000/heatmaps/heatmap_2025-02-27_01-00-00_Vehicle_Count.html";
     });
 
     print("Generate clicked with selections:");
