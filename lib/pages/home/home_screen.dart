@@ -59,11 +59,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 16),
                     DropdownSelector(
                       label: "Traffic Type",
-                      items: const ["None", "Pedestrian", "Vehicle", "Cyclist"],
-                      selectedValue: selectedTrafficType ?? "None",
+                      items: const [
+                        "Traffic Type",
+                        "Pedestrian",
+                        "Vehicle",
+                        "Cyclist"
+                      ],
+                      selectedValue: selectedTrafficType ?? "Traffic Type",
                       onChanged: (value) {
                         setState(() {
-                          selectedTrafficType = value == "None" ? null : value;
+                          selectedTrafficType =
+                              value == "Traffic Type" ? null : value;
                         });
                       },
                       onDropdownStateChanged: (isOpen) {
@@ -77,11 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 16),
                     DropdownSelector(
                       label: "Time",
-                      items: const ["None", "12:00:00", "13:00:00"],
-                      selectedValue: selectedTime ?? "None",
+                      items: const ["Time", "12:00:00", "13:00:00"],
+                      selectedValue: selectedTime ?? "Time",
                       onChanged: (value) {
                         setState(() {
-                          selectedTime = value == "None" ? null : value;
+                          selectedTime = value == "Time" ? null : value;
                         });
                       },
                       onDropdownStateChanged: (isOpen) {
@@ -94,16 +100,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     DropdownSelector(
                       label: "Season",
                       items: const [
-                        "None",
+                        "Season",
                         "Summer",
                         "Autumn",
                         "Winter",
                         "Spring"
                       ],
-                      selectedValue: selectedSeason ?? "None",
+                      selectedValue: selectedSeason ?? "Season",
                       onChanged: (value) {
                         setState(() {
-                          selectedSeason = value == "None" ? null : value;
+                          selectedSeason = value == "Season" ? null : value;
                         });
                       },
                       onDropdownStateChanged: (isOpen) {
