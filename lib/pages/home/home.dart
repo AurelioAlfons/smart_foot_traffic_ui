@@ -6,7 +6,7 @@ import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
 import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
 import 'package:smart_foot_traffic_ui/components/appbar_button.dart';
 import 'package:smart_foot_traffic_ui/components/zoom_button.dart';
-import '../components/heatmap_view.dart';
+import '../../components/heatmap_view.dart';
 
 class PersistentHeatmapView extends StatefulWidget {
   final String url;
@@ -69,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Image.asset('assets/images/council_logo.png', height: 160),
                   const Spacer(),
-                  AppBarButton(label: "Home", onPressed: () {}),
+                  AppBarButton(
+                      label: "Home", onPressed: resetState), // 👈 Reset here
                   AppBarButton(label: "Location", onPressed: () {}),
                   AppBarButton(label: "Transport", onPressed: () {}),
                   AppBarButton(label: "Map", onPressed: () {}),
@@ -285,5 +286,17 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Date: $selectedDate");
     print("Time: $selectedTime");
     print("Season: $selectedSeason");
+  }
+
+  // 👇 ADD this at the end
+  void resetState() {
+    setState(() {
+      selectedTrafficType = null;
+      selectedDate = null;
+      selectedTime = null;
+      selectedSeason = null;
+      heatmapUrl = null;
+      isDropdownOpen = false;
+    });
   }
 }
