@@ -7,6 +7,8 @@ class ZoomButton extends StatelessWidget {
 
   const ZoomButton({super.key, required this.url});
 
+  // This method opens the provided URL in a new tab.
+  // If the URL is null or empty, it prints a message to the console.
   void _openInNewTab() {
     if (url != null && url!.isNotEmpty) {
       html.window.open(url!, '_blank');
@@ -20,6 +22,7 @@ class ZoomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
+      // Button to open the URL in a new tab
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 255, 18, 18),

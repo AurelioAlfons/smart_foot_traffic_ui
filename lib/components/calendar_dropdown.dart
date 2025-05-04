@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 
 class CalendarDropdown extends StatefulWidget {
   final ValueChanged<DateTime> onDateSelected;
-  final ValueChanged<bool> onDropdownStateChanged; // 👈 Add this!
+  final ValueChanged<bool> onDropdownStateChanged;
+
+  final DateTime firstDate;
+  final DateTime lastDate;
 
   const CalendarDropdown({
     super.key,
     required this.onDateSelected,
-    required this.onDropdownStateChanged, // 👈 Add this too
+    required this.onDropdownStateChanged,
+    required this.firstDate,
+    required this.lastDate,
   });
 
   @override
@@ -23,10 +28,10 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
   void _toggleCalendar() {
     if (_overlayEntry == null) {
       _showCalendar();
-      widget.onDropdownStateChanged(true); // 👈 Notify open
+      widget.onDropdownStateChanged(true);
     } else {
       _removeCalendar();
-      widget.onDropdownStateChanged(false); // 👈 Notify close
+      widget.onDropdownStateChanged(false);
     }
   }
 
@@ -38,7 +43,7 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
   void _removeCalendar() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    widget.onDropdownStateChanged(false); // 👈 Notify close if removed manually
+    widget.onDropdownStateChanged(false);
   }
 
   OverlayEntry _createOverlayEntry() {
@@ -61,9 +66,9 @@ class _CalendarDropdownState extends State<CalendarDropdown> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: CalendarDatePicker(
-              initialDate: _selectedDate ?? DateTime.now(),
-              firstDate: DateTime(2020),
-              lastDate: DateTime(2030),
+              initialDate: _selectedDate ?? widget.firstDate,
+              firstDate: widget.firstDate,
+              lastDate: widget.lastDate,
               onDateChanged: (date) {
                 setState(() {
                   _selectedDate = date;

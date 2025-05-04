@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedDate;
   String? selectedTime;
   String? selectedSeason;
-
   String? heatmapUrl;
   bool isDropdownOpen = false;
   bool isLoading = false;
@@ -47,7 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // AppBar - When pressed, reset state
+      // Void resetSatete() is down below
       appBar: CustomAppBar(onHomePressed: resetState),
+
+      // Body - Contains the dropdowns and heatmap view
       body: Container(
         color: Colors.white,
         child: Column(
@@ -61,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     const SizedBox(width: 16),
+
+                    // 1. Traffic Type Dropdown
                     DropdownSelector(
                       label: "Traffic Type",
                       items: const [
@@ -83,8 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(width: 16),
+
+                    // 2. Date Picker Dropdown
+                    // Call _buildDatePickerButton() function
                     _buildDatePickerButton(),
                     const SizedBox(width: 16),
+
+                    // 3. Time Picker Dropdown
                     DropdownSelector(
                       label: "Time",
                       items: const [
@@ -127,6 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(width: 16),
+
+                    // 4. Season Dropdown
                     DropdownSelector(
                       label: "Season",
                       items: const [
@@ -149,6 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(width: 16),
+
+                    // 5. Generate Button
                     SizedBox(
                       height: 45,
                       child: ElevatedButton(
@@ -167,12 +181,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(width: 16),
+
+                    // 6. Reset Button
+                    // Check zoom_button.dart for the code
+                    // Only works when the heatmap is generated
+                    // Open in a new tab
                     ZoomButton(url: heatmapUrl),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 10),
+
+            // 7. Heatmap View and Summary Board
+            // Check heatmap_view.dart for the code
             Expanded(
               child: Row(
                 children: [
@@ -242,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Build the calendar dropdown button
   Widget _buildDatePickerButton() {
     return CalendarDropdown(
       onDateSelected: (pickedDate) {
@@ -255,10 +278,16 @@ class _HomeScreenState extends State<HomeScreen> {
           isDropdownOpen = isOpen;
         });
       },
+      // First and Last date for calendar (1 year of data)
+      // You can change this to your needs
+      firstDate: DateTime(2024, 3, 4),
+      lastDate: DateTime(2025, 3, 3),
     );
   }
 
+  // This function is called when the "Generate" button is pressed
   void generateHeatmap() async {
+    // Logs for debugging
     print("\nGenerateHeatmap function called");
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     print("Traffic Type: $selectedTrafficType");
@@ -267,11 +296,13 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Selected Season: $selectedSeason");
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
+    // Check if fields are filled
     if (selectedTrafficType == null || selectedDate == null) {
       print("Please select traffic type and date first!");
       return;
     }
 
+    // Logic to convert selected traffic type to backend format
     String trafficTypeForBackend = "";
     if (selectedTrafficType == "Pedestrian") {
       trafficTypeForBackend = "Pedestrian Count";
@@ -281,12 +312,15 @@ class _HomeScreenState extends State<HomeScreen> {
       trafficTypeForBackend = "Cyclist Count";
     }
 
+    // This is the URL of your backend API
     final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap");
 
+    // This is the payload sent to the backend
     setState(() {
       isLoading = true;
     });
 
+    // This is the HTTP POST request to generate the heatmap
     try {
       final response = await http.post(
         url,
@@ -299,25 +333,32 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
       );
 
+      // Check the response from the backend
+      // If the response is successful, update the heatmap URL
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
+          // Update the webview url to display the generated
           heatmapUrl = data['heatmap_url'];
         });
+        // Log successfull
         print("Heatmap generated at: $heatmapUrl");
       } else {
+        // Unsuccessful response
         print("Failed to generate heatmap. Status: ${response.statusCode}");
       }
     } catch (e) {
       print("Error generating heatmap: $e");
     } finally {
       setState(() {
-        isLoading = false; // 👈 Stop loading
+        // Stop loading
+        isLoading = false;
       });
     }
   }
 
-  // 👇 ADD this at the end
+  // Reset everything when the home button is pressed
+  // Or navigating from another screen to home
   void resetState() {
     setState(() {
       selectedTrafficType = null;
