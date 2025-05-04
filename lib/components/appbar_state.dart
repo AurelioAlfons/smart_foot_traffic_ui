@@ -4,134 +4,146 @@ import 'package:smart_foot_traffic_ui/pages/home/home_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/location/location_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
-import 'appbar_button.dart'; // ✅ still needed
+import 'appbar_button.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback onHomePressed;
 
   const CustomAppBar({super.key, required this.onHomePressed});
 
   @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+
+  @override
   Size get preferredSize => const Size.fromHeight(90);
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  bool _isMenuOpen = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            spreadRadius: 2,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        toolbarHeight: 90,
-        title: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Wrap Image inside GestureDetector for both click and hover effect
-              GestureDetector(
-                onTap: () {
-                  navigateWithoutAnimation(context, '/');
-                },
-                child: MouseRegion(
-                  onEnter: (_) {
-                    // Changes cursor to hand pointer when hovering
-                    SystemMouseCursors.click;
-                  },
-                  child: Image.asset('assets/images/council_logo.png',
-                      height: 160),
-                ),
-              ),
-              const Spacer(),
-              // AppBar buttons to navigate between screens with hover effect and pointer cursor
-              MouseRegion(
-                onEnter: (_) {
-                  SystemMouseCursors.click;
-                },
-                child: AppBarButton(
-                  label: "Home",
-                  onPressed: () {
-                    navigateWithoutAnimation(context, '/');
-                  },
-                ),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  SystemMouseCursors.click;
-                },
-                child: AppBarButton(
-                  label: "Location",
-                  onPressed: () {
-                    navigateWithoutAnimation(context, '/location');
-                  },
-                ),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  SystemMouseCursors.click;
-                },
-                child: AppBarButton(
-                  label: "Transport",
-                  onPressed: () {
-                    navigateWithoutAnimation(context, '/transport');
-                  },
-                ),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  SystemMouseCursors.click;
-                },
-                child: AppBarButton(
-                  label: "Map",
-                  onPressed: () {
-                    navigateWithoutAnimation(context, '/map');
-                  },
-                ),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  SystemMouseCursors.click;
-                },
-                child: AppBarButton(
-                  label: "About",
-                  onPressed: () {
-                    navigateWithoutAnimation(context, '/about');
-                  },
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow[700],
-                  foregroundColor: Colors.black,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isMobile = constraints.maxWidth < 750;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              color: Colors.white,
+              child: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                toolbarHeight: 90,
+                title: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => navigateWithoutAnimation(context, '/'),
+                        child: Image.asset('assets/images/council_logo.png',
+                            height: 160),
+                      ),
+                      const Spacer(),
+                      if (isMobile)
+                        IconButton(
+                          icon: Icon(
+                            _isMenuOpen ? Icons.close : Icons.menu,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() => _isMenuOpen = !_isMenuOpen);
+                          },
+                        )
+                      else
+                        Row(children: _buildMenuItems(context)),
+                      if (!isMobile) const SizedBox(width: 8),
+                      if (!isMobile)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[700],
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 14),
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: const Text("Register Now →"),
+                        ),
+                    ],
                   ),
                 ),
-                onPressed: () {},
-                child: const Text("Register Now →"),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+            if (_isMenuOpen)
+              Container(
+                color: Colors.white,
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height -
+                      widget.preferredSize.height,
+                ),
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ..._buildMenuItems(context),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow[700],
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 14),
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: const Text("Register Now →"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
-  // 👉 This handles instant no-animation navigation
+  List<Widget> _buildMenuItems(BuildContext context) {
+    return [
+      AppBarButton(
+        label: "Home",
+        onPressed: () => navigateWithoutAnimation(context, '/'),
+      ),
+      AppBarButton(
+        label: "Location",
+        onPressed: () => navigateWithoutAnimation(context, '/location'),
+      ),
+      AppBarButton(
+        label: "Transport",
+        onPressed: () => navigateWithoutAnimation(context, '/transport'),
+      ),
+      AppBarButton(
+        label: "Map",
+        onPressed: () => navigateWithoutAnimation(context, '/map'),
+      ),
+      AppBarButton(
+        label: "About",
+        onPressed: () => navigateWithoutAnimation(context, '/about'),
+      ),
+    ];
+  }
+
   void navigateWithoutAnimation(BuildContext context, String routeName) {
     Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
@@ -143,7 +155,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  // 👉 This finds the correct page based on route name
   Widget _getPage(String routeName) {
     switch (routeName) {
       case '/location':
