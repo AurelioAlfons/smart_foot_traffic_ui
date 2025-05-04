@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/home/home_screen.dart';
-// Later you can add transport, map, about screens
 
 void main() {
   runApp(const MyApp());

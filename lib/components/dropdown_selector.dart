@@ -5,7 +5,7 @@ class DropdownSelector extends StatelessWidget {
   final List<String> items;
   final String? selectedValue;
   final ValueChanged<String?> onChanged;
-  final ValueChanged<bool>? onDropdownStateChanged; // 👈 ADD THIS
+  final ValueChanged<bool>? onDropdownStateChanged;
 
   const DropdownSelector({
     super.key,
@@ -13,7 +13,7 @@ class DropdownSelector extends StatelessWidget {
     required this.items,
     required this.selectedValue,
     required this.onChanged,
-    this.onDropdownStateChanged, // 👈 ADD THIS
+    this.onDropdownStateChanged,
   });
 
   @override
@@ -41,21 +41,26 @@ class DropdownSelector extends StatelessWidget {
             color: Colors.black,
             fontWeight: FontWeight.w600,
           ),
+
+          // Set the items in the dropdown menu
           items: items
               .map((value) => DropdownMenuItem(
                     value: value,
                     child: Text(value),
                   ))
               .toList(),
+
+          // Set the selected value to null if it is not in the list of items
           onChanged: (value) {
             onChanged(value); // update selected value
             if (onDropdownStateChanged != null) {
-              onDropdownStateChanged!(false); // 👈 dropdown closed
+              onDropdownStateChanged!(false);
             }
           },
+          // Show the dropdown menu when the user taps on the button
           onTap: () {
             if (onDropdownStateChanged != null) {
-              onDropdownStateChanged!(true); // 👈 dropdown opened
+              onDropdownStateChanged!(true);
             }
           },
         ),

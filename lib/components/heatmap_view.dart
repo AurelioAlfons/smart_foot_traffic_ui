@@ -11,6 +11,9 @@ class HeatmapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // This is a workaround to display a webview in Flutter Web.
+    // The webview is created using an IFrameElement and registered with the
+    // platformViewRegistry. The viewID is generated using the URL and the
     if (kIsWeb) {
       final String viewID =
           url + DateTime.now().millisecondsSinceEpoch.toString();
@@ -24,8 +27,10 @@ class HeatmapView extends StatelessWidget {
       ui.platformViewRegistry
           .registerViewFactory(viewID, (int viewId) => iframe);
 
+      // The HtmlElementView widget is used to display the IFrameElement in the
       return HtmlElementView(viewType: viewID);
     } else {
+      // For Android and iOS, use the WebView widget from the webview_flutter package.
       return const Center(child: Text('WebView supported only on Android/iOS'));
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Summary box on the right side of the screen
 class SummaryBoard extends StatelessWidget {
   const SummaryBoard({super.key});
 

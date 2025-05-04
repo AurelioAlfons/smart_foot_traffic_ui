@@ -25,8 +25,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        bool isMobile = constraints.maxWidth < 750;
+        // When the screen width is less than 950, we consider it as mobile
+        bool isMobile = constraints.maxWidth < 950;
 
+        // Column collapsable menu
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -41,11 +43,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   child: Row(
                     children: [
                       GestureDetector(
+                        // Council logo - When click reset state to home screen
                         onTap: () => navigateWithoutAnimation(context, '/'),
                         child: Image.asset('assets/images/council_logo.png',
                             height: 160),
                       ),
                       const Spacer(),
+
+                      // Show menu icon
                       if (isMobile)
                         IconButton(
                           icon: Icon(
@@ -79,6 +84,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
             ),
+            // Show menu items when the menu icon is clicked
             if (_isMenuOpen)
               Container(
                 color: Colors.white,
@@ -119,6 +125,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
+  // Build menu items for the app bar
   List<Widget> _buildMenuItems(BuildContext context) {
     return [
       AppBarButton(
@@ -144,6 +151,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     ];
   }
 
+  // Remove the animation when navigating to a new screen
   void navigateWithoutAnimation(BuildContext context, String routeName) {
     Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
@@ -155,6 +163,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
+  // Routes
   Widget _getPage(String routeName) {
     switch (routeName) {
       case '/location':
