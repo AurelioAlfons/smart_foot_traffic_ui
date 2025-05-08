@@ -313,7 +313,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // This is the URL of your backend API
-    final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap");
+    // 127.0.0.1 is the localhost address
+    // To access the heatmap, you need to run the backend server
+    // and make sure the URL is correct
+    // This URL tells the server using POST method to generate the heatmap
+    // http://192.168.1.118:5000
+    // final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap");
+    final url = Uri.parse("http://192.168.1.118:5000/api/generate_heatmap");
 
     // This is the payload sent to the backend
     setState(() {
