@@ -318,9 +318,10 @@ class _HomeScreenState extends State<HomeScreen> {
     // 👉 Make sure your backend is running locally (Flask)
     // 👉 Use 127.0.0.1 for Android Emulator, or your PC IP for physical device
     // ===============================================
-    // final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap"); // Emulator
     final url =
-        Uri.parse("http://192.168.1.118:5000/api/generate_heatmap"); // Local IP
+        Uri.parse("http://127.0.0.1:5000/api/generate_heatmap"); // Emulator
+    // final url =
+    //     Uri.parse("http://192.168.1.118:5000/api/generate_heatmap"); // Local IP
 
     // ===============================================
     // ☁️ OPTION 2: Use Render (cloud backend)
