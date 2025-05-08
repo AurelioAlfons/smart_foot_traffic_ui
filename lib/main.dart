@@ -20,3 +20,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// To run the app in web mode, use the following command:
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/* 
+cd build/web 
+python -m http.server 8080
+*/
