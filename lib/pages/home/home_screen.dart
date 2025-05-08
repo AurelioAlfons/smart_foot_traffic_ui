@@ -319,7 +319,9 @@ class _HomeScreenState extends State<HomeScreen> {
     // This URL tells the server using POST method to generate the heatmap
     // http://192.168.1.118:5000
     // final url = Uri.parse("http://127.0.0.1:5000/api/generate_heatmap");
-    final url = Uri.parse("http://192.168.1.118:5000/api/generate_heatmap");
+    // final url = Uri.parse("http://192.168.1.118:5000/api/generate_heatmap");
+    final url = Uri.parse(
+        "https://smart-foot-traffic-backend.onrender.com/api/generate_heatmap");
 
     // This is the payload sent to the backend
     setState(() {
