@@ -67698,7 +67698,7 @@ break}l=""
 if(g==="Pedestrian")l="Pedestrian Count"
 else if(g==="Vehicle")l="Vehicle Count"
 else if(g==="Cyclist")l="Cyclist Count"
-k=A.fW("http://192.168.1.118:5000/api/generate_heatmap")
+k=A.fW("https://smart-foot-traffic-backend.onrender.com/api/generate_heatmap")
 m.ai(new A.aaT(m))
 p=4
 g=t.N
