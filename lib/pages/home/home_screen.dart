@@ -318,8 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // 👉 Make sure your backend is running locally (Flask)
     // 👉 Use 127.0.0.1 for Android Emulator, or your PC IP for physical device
     // ===============================================
-    final url =
-        Uri.parse("http://127.0.0.1:5000/api/generate_heatmap"); // Emulator
+    // final url =
+    //     Uri.parse("http://127.0.0.1:5000/api/generate_heatmap"); // Emulator
     // final url =
     //     Uri.parse("http://192.168.1.118:5000/api/generate_heatmap"); // Local IP
 
@@ -327,8 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // ☁️ OPTION 2: Use Render (cloud backend)
     // 👉 Use this when testing deployed cloud version
     // ===============================================
-    // final url = Uri.parse(
-    //     "https://smart-foot-traffic-backend.onrender.com/api/generate_heatmap");
+    final url = Uri.parse(
+        "https://smart-foot-traffic-backend.onrender.com/api/generate_heatmap");
 
     // This is the payload sent to the backend
     setState(() {
