@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/pages/about/about_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/home/home_screen.dart';
-import 'package:smart_foot_traffic_ui/pages/location/location_screen.dart';
+import 'package:smart_foot_traffic_ui/pages/gallery/gallery_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/map/map_screen.dart';
 import 'package:smart_foot_traffic_ui/pages/transport/transport_screen.dart';
 import 'appbar_button.dart';
@@ -133,16 +133,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
         onPressed: () => navigateWithoutAnimation(context, '/'),
       ),
       AppBarButton(
-        label: "Location",
-        onPressed: () => navigateWithoutAnimation(context, '/location'),
-      ),
-      AppBarButton(
-        label: "Transport",
-        onPressed: () => navigateWithoutAnimation(context, '/transport'),
+        label: "Gallery",
+        onPressed: () => navigateWithoutAnimation(context, '/gallery'),
       ),
       AppBarButton(
         label: "Map",
         onPressed: () => navigateWithoutAnimation(context, '/map'),
+      ),
+      AppBarButton(
+        label: "Transport",
+        onPressed: () => navigateWithoutAnimation(context, '/transport'),
       ),
       AppBarButton(
         label: "About",
@@ -166,8 +166,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   // Routes
   Widget _getPage(String routeName) {
     switch (routeName) {
-      case '/location':
-        return const LocationScreen();
+      case '/gallery':
+        return const GalleryScreen();
       case '/transport':
         return const TransportScreen();
       case '/map':
