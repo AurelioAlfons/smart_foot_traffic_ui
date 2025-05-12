@@ -330,9 +330,24 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Selected Season: $selectedSeason");
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-    // Check if fields are filled
-    if (selectedTrafficType == null || selectedDate == null) {
-      print("Please select traffic type and date first!");
+    // 🚨 Check if main fields are selected
+    if (selectedTrafficType == null ||
+        selectedDate == null ||
+        selectedTime == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Missing Parameters"),
+          content: const Text(
+              "Please select Traffic Type, Date, and Time before generating the heatmap."),
+          actions: [
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 
