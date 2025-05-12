@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:smart_foot_traffic_ui/components/appbar_state.dart';
+import 'package:smart_foot_traffic_ui/components/season_helper.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
 import 'package:smart_foot_traffic_ui/components/calendar_dropdown.dart';
 import 'package:smart_foot_traffic_ui/components/dropdown_selector.dart';
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedDate;
   String? selectedTime;
   String? selectedSeason;
+  String? selectedYear;
   String? heatmapUrl;
   bool isDropdownOpen = false;
   bool isLoading = false;
@@ -128,6 +130,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       onChanged: (value) {
                         setState(() {
                           selectedTime = value == "Time" ? null : value;
+                        });
+                      },
+                      onDropdownStateChanged: (isOpen) {
+                        setState(() {
+                          isDropdownOpen = isOpen;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 16),
+
+                    // 🟨 Divider between Time and Year
+                    Container(
+                      width: 1,
+                      height: 35,
+                      color: Colors.black26,
+                    ),
+                    const SizedBox(width: 16),
+
+                    // 5. Year Dropdown - For Season
+                    DropdownSelector(
+                      label: "Year",
+                      items: const ["Year", "2024", "2025"],
+                      selectedValue: selectedYear ?? "Year",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedYear = value == "Year" ? null : value;
                         });
                       },
                       onDropdownStateChanged: (isOpen) {
@@ -266,6 +294,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Build the calendar dropdown button
   Widget _buildDatePickerButton() {
+    final fullStart = DateTime(2024, 3, 4);
+    final fullEnd = DateTime(2025, 3, 3);
+
+    final dateRange =
+        getDateRangeForSeason(fullStart, fullEnd, selectedSeason, selectedYear);
+    final start = dateRange["start"]!;
+    final end = dateRange["end"]!;
+
     return CalendarDropdown(
       onDateSelected: (pickedDate) {
         setState(() {
@@ -278,10 +314,8 @@ class _HomeScreenState extends State<HomeScreen> {
           isDropdownOpen = isOpen;
         });
       },
-      // First and Last date for calendar (1 year of data)
-      // You can change this to your needs
-      firstDate: DateTime(2024, 3, 4),
-      lastDate: DateTime(2025, 3, 3),
+      firstDate: start,
+      lastDate: end,
     );
   }
 
