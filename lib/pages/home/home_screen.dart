@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:smart_foot_traffic_ui/api/heatmap_api.dart';
 import 'package:smart_foot_traffic_ui/components/appbar_state.dart';
 import 'package:smart_foot_traffic_ui/components/season_helper.dart';
 import 'package:smart_foot_traffic_ui/components/summary_board.dart';
@@ -82,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           selectedTrafficType =
                               value == "Traffic Type" ? null : value;
                         });
+                        _tryPreload();
                       },
                       onDropdownStateChanged: (isOpen) {
                         setState(() {
@@ -131,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {
                           selectedTime = value == "Time" ? null : value;
                         });
+                        _tryPreload();
                       },
                       onDropdownStateChanged: (isOpen) {
                         setState(() {
@@ -308,6 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedDate =
               "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
         });
+        _tryPreload();
       },
       onDropdownStateChanged: (isOpen) {
         setState(() {
@@ -364,8 +368,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // 🌐 Backend API URL – used to trigger heatmap generation via POST request
     // ===============================================
     // 🧪 OPTION 1: Use Localhost (for debugging on local machine)
-    // 👉 Make sure your backend is running locally (Flask)
-    // 👉 Use 127.0.0.1 for Android Emulator, or your PC IP for physical device
+    // 👉 Make sure our backend is running locally (Flask)
+    // 👉 Use 127.0.0.1 for Android Emulator, or PC IP for physical device
     // ===============================================
     // final url =
     //     Uri.parse("http://127.0.0.1:5000/api/generate_heatmap"); // Emulator
@@ -432,5 +436,22 @@ class _HomeScreenState extends State<HomeScreen> {
       heatmapUrl = null;
       isDropdownOpen = false;
     });
+  }
+
+  void _tryPreload() {
+    if (selectedTrafficType != null && selectedDate != null) {
+      final trafficType = selectedTrafficType == "Pedestrian"
+          ? "Pedestrian Count"
+          : selectedTrafficType == "Vehicle"
+              ? "Vehicle Count"
+              : "Cyclist Count";
+
+      preloadHeatmap(
+        trafficType: trafficType,
+        date: selectedDate!,
+        time: selectedTime,
+        season: selectedSeason,
+      );
+    }
   }
 }
